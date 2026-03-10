@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Planificador Semanal v2</title>
+  <title>Planificador Semanal v2.1</title>
   <style>
     :root {
       --bg: #090a10;
@@ -22,7 +22,6 @@
       --sidebar-w: 310px;
       --shadow: 0 10px 28px rgba(0,0,0,.28);
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
     body {
@@ -32,200 +31,75 @@
       min-height: 100vh;
       overflow: hidden;
     }
-    button, input { font: inherit; }
+    button, input, select { font: inherit; }
     button { border: 0; }
-
-    .app {
-      display: grid;
-      grid-template-rows: 74px 1fr;
-      height: 100vh;
-    }
-
+    .app { display: grid; grid-template-rows: 74px 1fr; height: 100vh; }
     .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 14px 20px;
-      background: rgba(17,19,27,.92);
-      border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(10px);
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 14px 20px; background: rgba(17,19,27,.92); border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 50;
     }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
     .brand-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, #8d82ff, #6553ff);
-      box-shadow: var(--shadow);
-      flex: 0 0 auto;
+      width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+      background: linear-gradient(135deg, #8d82ff, #6553ff); box-shadow: var(--shadow); flex: 0 0 auto;
     }
-    .brand h1 {
-      font-size: 18px;
-      line-height: 1.1;
-      font-weight: 800;
-    }
-    .brand p {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
+    .brand h1 { font-size: 18px; line-height: 1.1; font-weight: 800; }
+    .brand p { font-size: 12px; color: var(--muted); margin-top: 4px; }
     .week-nav {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 10px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--surface-2);
-      min-width: 250px;
-      justify-content: center;
-      box-shadow: var(--shadow);
+      display: flex; align-items: center; gap: 8px; padding: 7px 10px;
+      border: 1px solid var(--border); border-radius: 14px; background: var(--surface-2);
+      min-width: 250px; justify-content: center; box-shadow: var(--shadow);
     }
     .week-nav button {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
+      width: 34px; height: 34px; border-radius: 10px; background: transparent; color: var(--muted); cursor: pointer;
     }
     .week-nav button:hover { background: rgba(255,255,255,.05); color: var(--text); }
-    #week-label {
-      min-width: 150px;
-      text-align: center;
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
+    #week-label { min-width: 150px; text-align: center; font-weight: 700; font-size: 13px; }
+    .actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
     .btn {
-      padding: 10px 14px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 700;
-      transition: .18s ease;
-      border: 1px solid transparent;
-      white-space: nowrap;
+      padding: 10px 14px; border-radius: 12px; cursor: pointer; font-weight: 700; transition: .18s ease;
+      border: 1px solid transparent; white-space: nowrap;
     }
     .btn:hover { transform: translateY(-1px); }
     .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-    .btn-ghost {
-      background: var(--surface-2);
-      color: var(--text);
-      border-color: var(--border);
-    }
+    .btn-ghost { background: var(--surface-2); color: var(--text); border-color: var(--border); }
     .btn-ghost:hover { border-color: var(--accent); }
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 10px 20px rgba(124,107,255,.25);
-    }
-    .btn-danger {
-      background: rgba(255,107,107,.12);
-      color: var(--danger);
-      border-color: rgba(255,107,107,.3);
-    }
-    .btn-success {
-      background: rgba(78,205,196,.13);
-      color: var(--success);
-      border-color: rgba(78,205,196,.32);
-    }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 10px 20px rgba(124,107,255,.25); }
+    .btn-danger { background: rgba(255,107,107,.12); color: var(--danger); border-color: rgba(255,107,107,.3); }
+    .btn-success { background: rgba(78,205,196,.13); color: var(--success); border-color: rgba(78,205,196,.32); }
+    .btn-warning { background: rgba(245,177,76,.13); color: var(--warning); border-color: rgba(245,177,76,.32); }
 
-    .main {
-      display: grid;
-      grid-template-columns: var(--sidebar-w) 1fr;
-      min-height: 0;
-    }
-
+    .main { display: grid; grid-template-columns: var(--sidebar-w) 1fr; min-height: 0; }
     .sidebar {
-      background: rgba(17,19,27,.88);
-      border-right: 1px solid var(--border);
-      padding: 16px;
-      overflow: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
+      background: rgba(17,19,27,.88); border-right: 1px solid var(--border); padding: 16px; overflow: auto;
+      display: flex; flex-direction: column; gap: 14px;
     }
-    .section-title {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 1.6px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+    .section-title { font-size: 11px; color: var(--muted); letter-spacing: 1.6px; text-transform: uppercase; margin-bottom: 8px; }
+    .status-box, .panel, .helper, .mode-box {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 12px; box-shadow: var(--shadow);
     }
-
-    .status-box,
-    .panel,
-    .mobile-controls {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 12px;
-      box-shadow: var(--shadow);
-    }
-
-    .status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+    .status-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
     .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--muted);
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 7px 10px;
+      display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted);
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 999px; padding: 7px 10px;
     }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--muted);
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    .status-dot.connected { background: #3ddc84; box-shadow: 0 0 12px rgba(61,220,132,.75); }
+    .mini-btn {
+      background: rgba(255,255,255,.05); color: var(--muted); border: 1px solid rgba(255,255,255,.07);
+      height: 30px; padding: 0 10px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: 700;
     }
-    .status-dot.connected {
-      background: #3ddc84;
-      box-shadow: 0 0 12px rgba(61,220,132,.75);
+    .mini-btn:hover { color: var(--text); border-color: var(--border); }
+    .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .mode-btn {
+      height: 38px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2); color: var(--muted); cursor: pointer; font-weight: 700;
     }
-
+    .mode-btn.active { color: var(--text); border-color: var(--accent); background: rgba(124,107,255,.1); }
     .activity-list { display: flex; flex-direction: column; gap: 8px; }
     .activity-chip {
-      display: grid;
-      grid-template-columns: 14px minmax(0,1fr) auto auto;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 11px;
-      border-radius: 14px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      user-select: none;
-      min-height: 54px;
-      transition: .16s ease;
+      display: grid; grid-template-columns: 14px minmax(0,1fr) auto auto; align-items: center; gap: 10px;
+      padding: 10px 11px; border-radius: 14px; border: 1px solid transparent; cursor: pointer; user-select: none; min-height: 54px; transition: .16s ease;
     }
     .activity-chip:hover { transform: translateX(2px); }
     .activity-chip.active { border-color: currentColor; }
@@ -233,334 +107,136 @@
     .activity-body { min-width: 0; }
     .activity-name { font-size: 15px; font-weight: 800; }
     .activity-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
-    .sync-pill,
-    .block-sync-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 44px;
-      height: 24px;
-      padding: 0 8px;
-      border-radius: 999px;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: .3px;
-      border: 1px solid rgba(255,255,255,.08);
-      color: var(--muted);
-      background: rgba(255,255,255,.03);
+    .sync-pill {
+      display: inline-flex; align-items: center; justify-content: center; min-width: 44px; height: 24px; padding: 0 8px; border-radius: 999px;
+      font-size: 10px; font-weight: 800; letter-spacing: .3px; border: 1px solid rgba(255,255,255,.08); color: var(--muted); background: rgba(255,255,255,.03);
     }
-    .sync-pill.on,
-    .block-sync-pill.on {
-      color: #c7fff4;
-      border-color: rgba(78,205,196,.34);
-      background: rgba(78,205,196,.11);
-    }
-    .mini-btn {
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      border: 1px solid rgba(255,255,255,.07);
-      height: 30px;
-      padding: 0 10px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .mini-btn:hover { color: var(--text); border-color: var(--border); }
-
+    .sync-pill.on { color: #c7fff4; border-color: rgba(78,205,196,.34); background: rgba(78,205,196,.11); }
     .panel input[type="text"] {
-      width: 100%;
-      height: 42px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--text);
-      padding: 0 12px;
-      outline: none;
+      width: 100%; height: 42px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); padding: 0 12px; outline: none;
     }
-    .panel-row {
-      display: grid;
-      grid-template-columns: 1fr 58px;
-      gap: 8px;
-      margin-bottom: 8px;
-    }
+    .panel-row { display: grid; grid-template-columns: 1fr 58px; gap: 8px; margin-bottom: 8px; }
     .panel input[type="color"] {
-      width: 58px;
-      height: 42px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      background: var(--surface-2);
-      padding: 4px;
+      width: 58px; height: 42px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); padding: 4px;
     }
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: var(--text);
-      margin-bottom: 10px;
-    }
+    .checkbox-row { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); margin-bottom: 10px; }
+    .helper { font-size: 12px; line-height: 1.55; color: var(--muted); border-left: 3px solid var(--accent); }
 
-    .helper {
-      font-size: 12px;
-      line-height: 1.55;
-      color: var(--muted);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 3px solid var(--accent);
-      border-radius: 16px;
-      padding: 12px;
-      box-shadow: var(--shadow);
+    .grid-wrap { overflow: auto; background: linear-gradient(180deg, rgba(9,10,16,.65), rgba(12,15,23,.85)); min-width: 0; }
+    .schedule-grid { display: grid; grid-template-columns: var(--time-col) repeat(6, minmax(180px, 1fr)); min-width: 1140px; }
+    .time-head, .day-header {
+      position: sticky; top: 0; z-index: 12; background: rgba(17,19,27,.97); backdrop-filter: blur(10px); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; padding: 12px 8px;
     }
-
-    .grid-wrap {
-      overflow: auto;
-      background: linear-gradient(180deg, rgba(9,10,16,.65), rgba(12,15,23,.85));
-      min-width: 0;
-    }
-    .schedule-grid {
-      display: grid;
-      grid-template-columns: var(--time-col) repeat(6, minmax(180px, 1fr));
-      min-width: 1140px;
-    }
-    .time-head,
-    .day-header {
-      position: sticky;
-      top: 0;
-      z-index: 12;
-      background: rgba(17,19,27,.97);
-      backdrop-filter: blur(10px);
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-      padding: 12px 8px;
-    }
-    .time-head {
-      left: 0;
-      z-index: 15;
-      background: rgba(10,11,17,.98);
-    }
+    .time-head { left: 0; z-index: 15; background: rgba(10,11,17,.98); }
     .day-header.today .day-name { color: var(--accent); }
-    .day-name {
-      font-size: 12px;
-      text-transform: uppercase;
-      font-weight: 900;
-      letter-spacing: 1.2px;
-    }
-    .day-date {
-      margin-top: 4px;
-      font-size: 11px;
-      color: var(--muted);
-    }
+    .day-name { font-size: 12px; text-transform: uppercase; font-weight: 900; letter-spacing: 1.2px; }
+    .day-date { margin-top: 4px; font-size: 11px; color: var(--muted); }
     .time-cell {
-      position: sticky;
-      left: 0;
-      z-index: 10;
-      height: var(--cell-h);
-      padding: 0 10px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      font-size: 11px;
-      color: var(--muted);
-      background: rgba(17,19,27,.98);
-      border-right: 1px solid var(--border);
-      border-bottom: 1px solid rgba(42,49,69,.5);
+      position: sticky; left: 0; z-index: 10; height: var(--cell-h); padding: 0 10px; display: flex; align-items: center; justify-content: flex-end;
+      font-size: 11px; color: var(--muted); background: rgba(17,19,27,.98); border-right: 1px solid var(--border); border-bottom: 1px solid rgba(42,49,69,.5);
     }
     .sched-cell {
-      position: relative;
-      height: var(--cell-h);
-      background: rgba(6,8,14,.8);
-      border-right: 1px solid rgba(42,49,69,.9);
-      border-bottom: 1px solid rgba(42,49,69,.45);
-      cursor: pointer;
-      touch-action: none;
-      user-select: none;
-      transition: filter .1s ease, background .15s ease;
+      position: relative; height: var(--cell-h); background: rgba(6,8,14,.8); border-right: 1px solid rgba(42,49,69,.9); border-bottom: 1px solid rgba(42,49,69,.45);
+      cursor: pointer; touch-action: none; user-select: none; transition: filter .1s ease, background .15s ease;
     }
     .sched-cell:hover { filter: brightness(1.08); }
     .sched-cell.block-start::before {
-      content: attr(data-label);
-      position: absolute;
-      left: 8px;
-      top: 7px;
-      font-size: 10px;
-      font-weight: 900;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      color: currentColor;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: calc(100% - 36px);
-      pointer-events: none;
+      content: attr(data-label); position: absolute; left: 8px; top: 7px; font-size: 10px; font-weight: 900; letter-spacing: .5px; text-transform: uppercase;
+      color: currentColor; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 36px); pointer-events: none;
     }
     .sched-cell.sync-on::after {
-      content: '✓';
-      position: absolute;
-      right: 7px;
-      top: 6px;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      font-size: 10px;
-      font-weight: 900;
-      color: #08110e;
-      background: var(--success);
-      box-shadow: 0 0 0 2px rgba(9,10,16,.65);
+      content: '✓'; position: absolute; right: 7px; top: 6px; width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center;
+      font-size: 10px; font-weight: 900; color: #08110e; background: var(--success); box-shadow: 0 0 0 2px rgba(9,10,16,.65);
     }
-    .sched-cell.selected-sync {
-      outline: 2px solid rgba(78,205,196,.9);
-      outline-offset: -2px;
-    }
+    .sched-cell.selected-block { outline: 2px solid rgba(245,177,76,.92); outline-offset: -2px; }
     .sched-cell.empty:hover { background: rgba(124,107,255,.07); }
 
-    .mobile-controls { display: none; }
-    .mobile-toolbar {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 2px;
+    .mobile-day-view { display: none; padding: 14px; }
+    .mobile-day-shell { display: grid; gap: 12px; }
+    .mobile-day-nav {
+      display: grid; grid-template-columns: 40px 1fr 40px; align-items: center; gap: 8px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 10px; box-shadow: var(--shadow);
     }
+    .mobile-day-nav button { height: 36px; border-radius: 10px; background: var(--surface-2); color: var(--text); cursor: pointer; }
+    .mobile-day-title { text-align: center; font-weight: 800; }
+    .mobile-category-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 2px; }
     .mobile-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      background: var(--surface-2);
-      color: var(--text);
-      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; padding: 10px 12px; border-radius: 999px;
+      border: 1px solid transparent; background: var(--surface); color: var(--text); cursor: pointer;
     }
     .mobile-chip.active { border-color: currentColor; }
+    .mobile-mode-bar { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    .mobile-list {
+      display: flex; flex-direction: column; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 10px; box-shadow: var(--shadow);
+    }
+    .mobile-row {
+      display: grid; grid-template-columns: 58px 1fr auto auto; gap: 8px; align-items: stretch;
+    }
+    .mobile-time {
+      font-size: 12px; color: var(--muted); display: flex; align-items: center; justify-content: center; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border);
+    }
+    .mobile-block {
+      min-height: 48px; border-radius: 14px; border: 1px solid transparent; display: flex; align-items: center; padding: 10px 12px; font-weight: 800; cursor: pointer; position: relative;
+      background: rgba(6,8,14,.8);
+    }
+    .mobile-block.sync-on::after {
+      content: '✓'; position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 900; color: #08110e; background: var(--success);
+    }
+    .mobile-block.selected-block { outline: 2px solid rgba(245,177,76,.92); outline-offset: -2px; }
+    .mobile-small-btn {
+      min-width: 38px; height: 48px; border-radius: 12px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); cursor: pointer;
+    }
+    .mobile-small-btn.active { color: var(--warning); border-color: rgba(245,177,76,.4); }
 
     dialog {
-      width: min(560px, calc(100vw - 24px));
-      border-radius: 20px;
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-      padding: 0;
-      margin: auto;
-      box-shadow: var(--shadow);
+      width: min(560px, calc(100vw - 24px)); border-radius: 20px; background: var(--surface); color: var(--text); border: 1px solid var(--border);
+      padding: 0; margin: auto; box-shadow: var(--shadow);
     }
-    dialog::backdrop {
-      background: rgba(0,0,0,.72);
-      backdrop-filter: blur(5px);
-    }
-    .modal-head,
-    .modal-body,
-    .modal-actions {
-      padding: 18px 20px;
-    }
-    .modal-head {
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
+    dialog::backdrop { background: rgba(0,0,0,.72); backdrop-filter: blur(5px); }
+    .modal-head, .modal-body, .modal-actions { padding: 18px 20px; }
+    .modal-head { border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
     .modal-head h2 { font-size: 18px; font-weight: 800; }
     .modal-body { display: flex; flex-direction: column; gap: 12px; }
-    .modal-body p,
-    .modal-body li {
-      font-size: 14px;
-      line-height: 1.55;
-      color: var(--muted);
-    }
+    .modal-body p, .modal-body li { font-size: 14px; line-height: 1.55; color: var(--muted); }
     .modal-body ol { padding-left: 18px; }
     .modal-body code {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2px 6px;
-      color: var(--text);
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 2px 6px; color: var(--text);
     }
     .modal-body input {
-      width: 100%;
-      height: 44px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--text);
-      padding: 0 12px;
-      outline: none;
+      width: 100%; height: 44px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); padding: 0 12px; outline: none;
     }
-    .modal-actions {
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
-
+    .modal-actions { border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
     .toast {
-      position: fixed;
-      right: 18px;
-      bottom: 18px;
-      max-width: 320px;
-      background: var(--surface);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 16px;
-      box-shadow: var(--shadow);
-      transform: translateY(80px);
-      opacity: 0;
-      transition: .22s ease;
-      z-index: 100;
-      font-size: 13px;
-      line-height: 1.45;
+      position: fixed; right: 18px; bottom: 18px; max-width: 320px; background: var(--surface); color: var(--text);
+      border: 1px solid var(--border); border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow); transform: translateY(80px); opacity: 0; transition: .22s ease; z-index: 100; font-size: 13px; line-height: 1.45;
     }
     .toast.show { transform: translateY(0); opacity: 1; }
     .toast.success { border-color: rgba(78,205,196,.36); }
     .toast.error { border-color: rgba(255,107,107,.36); }
 
     @media (max-width: 1024px) {
-      :root {
-        --sidebar-w: 100%;
-        --cell-h: 30px;
-      }
       body { overflow: auto; }
       .app { grid-template-rows: auto auto 1fr; height: auto; min-height: 100vh; }
-      .topbar {
-        position: static;
-        flex-wrap: wrap;
-        align-items: flex-start;
-      }
+      .topbar { position: static; flex-wrap: wrap; align-items: flex-start; }
       .week-nav { width: 100%; order: 3; min-width: 0; }
       .actions { width: 100%; justify-content: stretch; }
       .actions .btn { flex: 1 1 calc(50% - 8px); text-align: center; }
       .main { grid-template-columns: 1fr; }
-      .sidebar {
-        order: 1;
-        border-right: 0;
-        border-bottom: 1px solid var(--border);
-        max-height: none;
-      }
-      .grid-wrap {
-        min-height: 58vh;
-      }
-      .schedule-grid { min-width: 920px; }
-      .mobile-controls { display: block; }
-      .desktop-only { display: none !important; }
+      .sidebar { border-right: 0; border-bottom: 1px solid var(--border); }
+      .grid-wrap { min-height: 58vh; }
     }
-
+    @media (max-width: 768px) {
+      .grid-wrap { display: none; }
+      .mobile-day-view { display: block; }
+      .sidebar { padding: 12px; }
+      .mode-grid { display: none; }
+      .actions { display: grid; grid-template-columns: 1fr 1fr; }
+      .actions .btn:last-child { grid-column: span 2; }
+    }
     @media (max-width: 640px) {
       .topbar { padding: 14px; }
       .brand h1 { font-size: 16px; }
       .brand p { font-size: 11px; }
-      .actions { display: grid; grid-template-columns: 1fr 1fr; }
-      .actions .btn:last-child { grid-column: span 2; }
-      .sidebar { padding: 12px; }
-      .schedule-grid { min-width: 840px; }
-      .time-cell, .time-head { font-size: 10px; }
-      .day-name { font-size: 11px; }
-      .day-date { font-size: 10px; }
-      .sched-cell.block-start::before { font-size: 9px; max-width: calc(100% - 28px); }
     }
   </style>
 </head>
@@ -570,21 +246,20 @@
       <div class="brand">
         <div class="brand-icon">📅</div>
         <div>
-          <h1>Planificador Semanal v2</h1>
-          <p>Bloques editables, sync por bloque, deduplicación y limpieza selectiva</p>
+          <h1>Planificador Semanal v2.1</h1>
+          <p>Vista móvil real, sync por bloque, importación y reconciliación</p>
         </div>
       </div>
-
       <div class="week-nav">
         <button id="prev-week" title="Semana anterior">←</button>
         <div id="week-label">Cargando…</div>
         <button id="next-week" title="Semana siguiente">→</button>
       </div>
-
       <div class="actions">
         <button class="btn btn-ghost" id="btn-google-auth">Conectar Google</button>
+        <button class="btn btn-warning" id="btn-import-week" disabled>Importar semana</button>
         <button class="btn btn-primary" id="btn-sync" disabled>Sincronizar bloques</button>
-        <button class="btn btn-success" id="btn-delete-selected" disabled>Borrar sincronizados</button>
+        <button class="btn btn-success" id="btn-delete-selected" disabled>Borrar seleccionados</button>
         <button class="btn btn-danger" id="btn-clear-week">Limpiar semana</button>
       </div>
     </header>
@@ -602,9 +277,16 @@
           <button class="btn btn-ghost" id="btn-select-synced" style="width:100%">Seleccionar sincronizados de la semana</button>
         </section>
 
-        <section class="mobile-controls">
-          <div class="section-title">Categoría rápida</div>
-          <div class="mobile-toolbar" id="mobile-toolbar"></div>
+        <section class="mode-box">
+          <div class="section-title">Modo de toque</div>
+          <div class="mode-grid">
+            <button class="mode-btn active" data-mode="paint">Pintar</button>
+            <button class="mode-btn" data-mode="sync">Sync</button>
+            <button class="mode-btn" data-mode="select">Seleccionar</button>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--muted);line-height:1.5">
+            En desktop podés arrastrar para pintar. En celular usá el modo activo: <strong>Pintar</strong>, <strong>Sync</strong> o <strong>Seleccionar</strong>.
+          </div>
         </section>
 
         <section>
@@ -626,7 +308,7 @@
         </section>
 
         <section class="helper">
-          Clic o arrastre para pintar. Tocá un bloque ya pintado para borrarlo. Cada bloque guarda dos cosas: la categoría y si sincroniza o no. <strong>Doble clic</strong> en un bloque cambia su estado de sync. El botón <strong>Sincronizar bloques</strong> crea o actualiza solo los bloques con sync activo. El botón <strong>Borrar sincronizados</strong> elimina del calendario los bloques que selecciones y limpia su marca local.
+          Los eventos se sincronizan en un solo sentido: <strong>planificador → Google</strong>. El botón <strong>Importar semana</strong> trae al planificador únicamente los eventos creados por esta app en esa semana. La sincronización ahora reconcilia: crea, actualiza y borra en Google lo que ya no exista en el planificador.
         </section>
       </aside>
 
@@ -634,6 +316,23 @@
         <div class="schedule-grid" id="schedule-grid"></div>
       </main>
     </div>
+
+    <section class="mobile-day-view">
+      <div class="mobile-day-shell">
+        <div class="mobile-day-nav">
+          <button id="mobile-prev-day">←</button>
+          <div class="mobile-day-title" id="mobile-day-title">Lun</div>
+          <button id="mobile-next-day">→</button>
+        </div>
+        <div class="mobile-category-bar" id="mobile-category-bar"></div>
+        <div class="mobile-mode-bar">
+          <button class="mode-btn active" data-mobile-mode="paint">Pintar</button>
+          <button class="mode-btn" data-mobile-mode="sync">Sync</button>
+          <button class="mode-btn" data-mobile-mode="select">Seleccionar</button>
+        </div>
+        <div class="mobile-list" id="mobile-list"></div>
+      </div>
+    </section>
   </div>
 
   <dialog id="config-dialog">
@@ -644,10 +343,8 @@
     <div class="modal-body">
       <p>Pegá tu <strong>OAuth Client ID</strong> de tipo <strong>Aplicación web</strong>. En Google Cloud, el origen autorizado debe ser <code>https://TU-USUARIO.github.io</code>.</p>
       <ol>
-        <li>Creá o elegí un proyecto en Google Cloud.</li>
         <li>Habilitá <strong>Google Calendar API</strong>.</li>
         <li>Configurá la pantalla de consentimiento.</li>
-        <li>Creá un cliente OAuth tipo <strong>Aplicación web</strong>.</li>
         <li>Agregá tu cuenta como <strong>usuario de prueba</strong> si la app está en Testing.</li>
       </ol>
       <input type="text" id="client-id-input" placeholder="123456789012-xxxx.apps.googleusercontent.com" />
@@ -662,9 +359,9 @@
 
   <script>
     const STORAGE_KEYS = {
-      categories: 'planner_v2_categories',
-      schedule: 'planner_v2_schedule',
-      clientId: 'planner_v2_google_client_id'
+      categories: 'planner_v21_categories',
+      schedule: 'planner_v21_schedule',
+      clientId: 'planner_v21_google_client_id'
     };
 
     const DEFAULT_CATEGORIES = [
@@ -683,25 +380,21 @@
     let accessToken = null;
     let weekOffset = 0;
     let currentCategoryId = categories[0]?.id || null;
+    let selectedBlocks = new Set();
+    let currentMode = 'paint';
+    let mobileDayIndex = 0;
     let isPainting = false;
     let paintPayload = null;
-    let selectedBlocks = new Set();
 
     function loadJson(key, fallback) {
-      try {
-        const value = JSON.parse(localStorage.getItem(key));
-        return value ?? fallback;
-      } catch {
-        return fallback;
-      }
+      try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+      catch { return fallback; }
     }
-
     function saveState() {
       localStorage.setItem(STORAGE_KEYS.categories, JSON.stringify(categories));
       localStorage.setItem(STORAGE_KEYS.schedule, JSON.stringify(schedule));
       localStorage.setItem(STORAGE_KEYS.clientId, clientId);
     }
-
     function createSlots(start, end, step) {
       const slots = [];
       const [sh, sm] = start.split(':').map(Number);
@@ -716,7 +409,6 @@
       }
       return slots;
     }
-
     function getWeekStart(offset = 0) {
       const now = new Date();
       const day = now.getDay();
@@ -726,12 +418,10 @@
       monday.setHours(0, 0, 0, 0);
       return monday;
     }
-
     function getWeekKey(offset = weekOffset) {
       const d = getWeekStart(offset);
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     }
-
     function getWeekDays(offset = weekOffset) {
       const monday = getWeekStart(offset);
       return Array.from({ length: 6 }, (_, i) => {
@@ -740,64 +430,47 @@
         return d;
       });
     }
-
     function formatWeekLabel() {
       const days = getWeekDays();
-      const from = days[0];
-      const to = days[5];
-      document.getElementById('week-label').textContent = `${from.getDate()}/${from.getMonth() + 1} → ${to.getDate()}/${to.getMonth() + 1} · ${from.getFullYear()}`;
+      document.getElementById('week-label').textContent = `${days[0].getDate()}/${days[0].getMonth()+1} → ${days[5].getDate()}/${days[5].getMonth()+1} · ${days[0].getFullYear()}`;
     }
-
     function createEmptyCell() {
-      return {
-        categoryId: null,
-        sync: false,
-        googleEventId: null,
-        googleSyncedAt: null,
-        deletedFromGoogle: false
-      };
+      return { categoryId: null, sync: false, googleEventId: null, googleSyncedAt: null };
     }
-
     function normalizeCell(cell) {
       if (!cell || typeof cell !== 'object') return createEmptyCell();
       return {
         categoryId: cell.categoryId ?? null,
         sync: Boolean(cell.sync),
         googleEventId: cell.googleEventId ?? null,
-        googleSyncedAt: cell.googleSyncedAt ?? null,
-        deletedFromGoogle: Boolean(cell.deletedFromGoogle)
+        googleSyncedAt: cell.googleSyncedAt ?? null
       };
     }
-
     function getWeekData(offset = weekOffset) {
       const key = getWeekKey(offset);
       if (!Array.isArray(schedule[key])) {
         schedule[key] = Array.from({ length: 6 }, () => Array.from({ length: SLOTS.length }, () => createEmptyCell()));
       }
       schedule[key] = schedule[key].map(day => {
-        const normalizedDay = Array.isArray(day) ? day.slice(0, SLOTS.length) : [];
-        while (normalizedDay.length < SLOTS.length) normalizedDay.push(createEmptyCell());
-        return normalizedDay.map(normalizeCell);
+        const arr = Array.isArray(day) ? day.slice(0, SLOTS.length) : [];
+        while (arr.length < SLOTS.length) arr.push(createEmptyCell());
+        return arr.map(normalizeCell);
       });
       return schedule[key];
     }
-
     function isToday(date) {
       const now = new Date();
       return now.getFullYear() === date.getFullYear() && now.getMonth() === date.getMonth() && now.getDate() === date.getDate();
     }
-
-    function findCategory(id) {
-      return categories.find(c => c.id === id) || null;
-    }
+    function findCategory(id) { return categories.find(c => c.id === id) || null; }
+    function getCellId(dayIndex, slotIndex) { return `${getWeekKey()}|${dayIndex}|${slotIndex}`; }
 
     function renderCategories() {
       const list = document.getElementById('activity-list');
+      const mobile = document.getElementById('mobile-category-bar');
       list.innerHTML = '';
-      const mobile = document.getElementById('mobile-toolbar');
       mobile.innerHTML = '';
-
-      for (const cat of categories) {
+      categories.forEach(cat => {
         const chip = document.createElement('div');
         chip.className = 'activity-chip' + (cat.id === currentCategoryId ? ' active' : '');
         chip.style.color = cat.color;
@@ -817,91 +490,111 @@
           renderCategories();
         });
         chip.querySelector('[data-action="edit"]').addEventListener('click', e => {
-          e.stopPropagation();
-          editCategory(cat.id);
+          e.stopPropagation(); editCategory(cat.id);
         });
         list.appendChild(chip);
 
-        const mobileChip = document.createElement('button');
-        mobileChip.className = 'mobile-chip' + (cat.id === currentCategoryId ? ' active' : '');
-        mobileChip.style.color = cat.color;
-        mobileChip.innerHTML = `<span class="activity-dot" style="background:${cat.color}"></span><span>${escapeHtml(cat.name)}</span>`;
-        mobileChip.addEventListener('click', () => {
-          currentCategoryId = cat.id;
-          renderCategories();
-        });
-        mobile.appendChild(mobileChip);
-      }
-
-      const clearChip = document.createElement('div');
-      clearChip.className = 'activity-chip' + (currentCategoryId === 'clear' ? ' active' : '');
-      clearChip.style.color = '#9aa3b7';
-      clearChip.style.background = 'rgba(154,163,183,.1)';
-      clearChip.innerHTML = `
-        <div class="activity-dot" style="background:#9aa3b7"></div>
-        <div class="activity-body">
-          <div class="activity-name">Borrar</div>
-          <div class="activity-meta">limpia celdas seleccionadas</div>
-        </div>
-        <div class="sync-pill">—</div>
-        <div></div>
-      `;
-      clearChip.addEventListener('click', () => {
-        currentCategoryId = 'clear';
-        renderCategories();
+        const m = document.createElement('button');
+        m.className = 'mobile-chip' + (cat.id === currentCategoryId ? ' active' : '');
+        m.style.color = cat.color;
+        m.innerHTML = `<span class="activity-dot" style="background:${cat.color}"></span><span>${escapeHtml(cat.name)}</span>`;
+        m.addEventListener('click', () => { currentCategoryId = cat.id; renderCategories(); });
+        mobile.appendChild(m);
       });
-      list.appendChild(clearChip);
+      ['clear'].forEach(() => {
+        const clearDesktop = document.createElement('div');
+        clearDesktop.className = 'activity-chip' + (currentCategoryId === 'clear' ? ' active' : '');
+        clearDesktop.style.color = '#9aa3b7';
+        clearDesktop.style.background = 'rgba(154,163,183,.1)';
+        clearDesktop.innerHTML = `
+          <div class="activity-dot" style="background:#9aa3b7"></div>
+          <div class="activity-body"><div class="activity-name">Borrar</div><div class="activity-meta">limpia celdas</div></div>
+          <div class="sync-pill">—</div><div></div>`;
+        clearDesktop.addEventListener('click', () => { currentCategoryId = 'clear'; renderCategories(); });
+        list.appendChild(clearDesktop);
 
-      const mobileClear = document.createElement('button');
-      mobileClear.className = 'mobile-chip' + (currentCategoryId === 'clear' ? ' active' : '');
-      mobileClear.style.color = '#9aa3b7';
-      mobileClear.innerHTML = `<span class="activity-dot" style="background:#9aa3b7"></span><span>Borrar</span>`;
-      mobileClear.addEventListener('click', () => {
-        currentCategoryId = 'clear';
-        renderCategories();
+        const clearMobile = document.createElement('button');
+        clearMobile.className = 'mobile-chip' + (currentCategoryId === 'clear' ? ' active' : '');
+        clearMobile.style.color = '#9aa3b7';
+        clearMobile.innerHTML = `<span class="activity-dot" style="background:#9aa3b7"></span><span>Borrar</span>`;
+        clearMobile.addEventListener('click', () => { currentCategoryId = 'clear'; renderCategories(); });
+        mobile.appendChild(clearMobile);
       });
-      mobile.appendChild(mobileClear);
     }
 
     function editCategory(id) {
       const cat = findCategory(id);
       if (!cat) return;
-      const name = prompt('Nombre de la categoría:', cat.name);
-      if (name === null) return;
-      const trimmed = name.trim();
+      const nextName = prompt('Nombre de la categoría:', cat.name);
+      if (nextName === null) return;
+      const trimmed = nextName.trim();
       if (!trimmed) return showToast('El nombre no puede quedar vacío', 'error');
-      const defaultSync = confirm(`¿Querés que los nuevos bloques de "${trimmed}" se marquen con sync activo por defecto?`);
-      cat.name = trimmed;
-      cat.defaultSync = defaultSync;
-      saveState();
-      renderCategories();
-      buildGrid();
-      showToast('Categoría actualizada', 'success');
+      const defaultSync = confirm(`¿Querés que los nuevos bloques de "${trimmed}" arranquen con sync activo?`);
+      cat.name = trimmed; cat.defaultSync = defaultSync;
+      saveState(); renderCategories(); rebuildViews(); showToast('Categoría actualizada', 'success');
     }
 
     function addCategory() {
-      const nameInput = document.getElementById('new-category-name');
-      const colorInput = document.getElementById('new-category-color');
-      const syncInput = document.getElementById('new-category-sync');
-      const name = nameInput.value.trim();
+      const name = document.getElementById('new-category-name').value.trim();
+      const color = document.getElementById('new-category-color').value;
+      const sync = document.getElementById('new-category-sync').checked;
       if (!name) return showToast('Ingresá un nombre de categoría', 'error');
-      if (categories.some(c => c.name.toLowerCase() === name.toLowerCase())) {
-        return showToast('Ya existe una categoría con ese nombre', 'error');
-      }
-      const cat = {
-        id: crypto.randomUUID(),
-        name,
-        color: colorInput.value,
-        defaultSync: syncInput.checked
-      };
+      if (categories.some(c => c.name.toLowerCase() === name.toLowerCase())) return showToast('Ya existe una categoría con ese nombre', 'error');
+      const cat = { id: crypto.randomUUID(), name, color, defaultSync: sync };
       categories.push(cat);
       currentCategoryId = cat.id;
-      nameInput.value = '';
-      colorInput.value = '#f59e0b';
-      syncInput.checked = true;
+      document.getElementById('new-category-name').value = '';
+      document.getElementById('new-category-color').value = '#f59e0b';
+      document.getElementById('new-category-sync').checked = true;
+      saveState(); renderCategories(); rebuildViews(); showToast('Categoría agregada', 'success');
+    }
+
+    function buildPaintPayload() {
+      if (currentCategoryId === 'clear') return createEmptyCell();
+      const cat = findCategory(currentCategoryId);
+      if (!cat) return createEmptyCell();
+      return { categoryId: cat.id, sync: cat.defaultSync, googleEventId: null, googleSyncedAt: null };
+    }
+    function sameContent(a, b) {
+      const aa = normalizeCell(a), bb = normalizeCell(b);
+      return aa.categoryId === bb.categoryId && aa.sync === bb.sync;
+    }
+    function setCellData(dayIndex, slotIndex, next) {
+      const data = getWeekData();
+      data[dayIndex][slotIndex] = normalizeCell(next);
       saveState();
-      renderCategories();
-      showToast('Categoría agregada', 'success');
+    }
+    function toggleCellSync(dayIndex, slotIndex) {
+      const data = getWeekData();
+      const cell = normalizeCell(data[dayIndex][slotIndex]);
+      if (!cell.categoryId) return showToast('Ese bloque está vacío', 'error');
+      cell.sync = !cell.sync;
+      cell.googleEventId = null;
+      cell.googleSyncedAt = null;
+      data[dayIndex][slotIndex] = cell;
+      saveState(); rebuildViews(); showToast(`Sync ${cell.sync ? 'activado' : 'desactivado'} para el bloque`, 'success');
+    }
+    function toggleSelection(dayIndex, slotIndex) {
+      const id = getCellId(dayIndex, slotIndex);
+      if (selectedBlocks.has(id)) selectedBlocks.delete(id); else selectedBlocks.add(id);
+      updateActionButtons(); rebuildViews();
+    }
+    function clearSelection() { selectedBlocks.clear(); updateActionButtons(); rebuildViews(); }
+
+    function applyModeAction(dayIndex, slotIndex) {
+      if (currentMode === 'select') return toggleSelection(dayIndex, slotIndex);
+      if (currentMode === 'sync') return toggleCellSync(dayIndex, slotIndex);
+      const current = getWeekData()[dayIndex][slotIndex];
+      const target = buildPaintPayload();
+      const next = sameContent(current, target) ? createEmptyCell() : target;
+      setCellData(dayIndex, slotIndex, next);
+      rebuildViews();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('[data-mode]').forEach(btn => btn.classList.toggle('active', btn.dataset.mode === mode));
+      document.querySelectorAll('[data-mobile-mode]').forEach(btn => btn.classList.toggle('active', btn.dataset.mobileMode === mode));
     }
 
     function buildGrid() {
@@ -909,40 +602,34 @@
       grid.innerHTML = '';
       const days = getWeekDays();
       const data = getWeekData();
-
       const timeHead = document.createElement('div');
       timeHead.className = 'time-head';
       grid.appendChild(timeHead);
-
       days.forEach((day, i) => {
         const head = document.createElement('div');
         head.className = 'day-header' + (isToday(day) ? ' today' : '');
-        head.innerHTML = `<div class="day-name">${DAYS_SHORT[i]}</div><div class="day-date">${day.getDate()}/${day.getMonth() + 1}</div>`;
+        head.innerHTML = `<div class="day-name">${DAYS_SHORT[i]}</div><div class="day-date">${day.getDate()}/${day.getMonth()+1}</div>`;
         grid.appendChild(head);
       });
-
       SLOTS.forEach((slot, slotIndex) => {
         const time = document.createElement('div');
         time.className = 'time-cell';
         time.textContent = slot.label;
         grid.appendChild(time);
-
         for (let dayIndex = 0; dayIndex < 6; dayIndex++) {
           const cell = document.createElement('div');
           cell.className = 'sched-cell';
           cell.dataset.day = String(dayIndex);
           cell.dataset.slot = String(slotIndex);
-          applyCellVisual(cell, data[dayIndex][slotIndex]);
-          attachCellEvents(cell);
+          applyCellVisual(cell, data[dayIndex][slotIndex], dayIndex, slotIndex);
+          attachDesktopCellEvents(cell);
           grid.appendChild(cell);
         }
       });
-
       for (let d = 0; d < 6; d++) updateBlockStarts(d);
-      updateSelectionVisuals();
     }
 
-    function applyCellVisual(el, cellData) {
+    function applyCellVisual(el, cellData, dayIndex, slotIndex) {
       const cell = normalizeCell(cellData);
       el.className = 'sched-cell';
       el.dataset.label = '';
@@ -950,277 +637,186 @@
         el.classList.add('empty');
         el.style.background = 'rgba(6,8,14,.8)';
         el.style.color = 'transparent';
-        return;
+      } else {
+        const cat = findCategory(cell.categoryId);
+        if (!cat) {
+          el.classList.add('empty');
+          el.style.background = 'rgba(6,8,14,.8)';
+          el.style.color = 'transparent';
+        } else {
+          el.style.background = hexToRgba(cat.color, cell.sync ? 0.28 : 0.18);
+          el.style.color = cat.color;
+          el.dataset.label = cat.name;
+          if (cell.sync) el.classList.add('sync-on');
+          if (cell.googleEventId) el.style.boxShadow = 'inset 0 0 0 1px rgba(78,205,196,.18)';
+          else el.style.boxShadow = 'none';
+        }
       }
-      const cat = findCategory(cell.categoryId);
-      if (!cat) {
-        el.classList.add('empty');
-        el.style.background = 'rgba(6,8,14,.8)';
-        el.style.color = 'transparent';
-        return;
-      }
-      el.style.background = hexToRgba(cat.color, cell.sync ? 0.28 : 0.18);
-      el.style.color = cat.color;
-      el.dataset.label = cat.name;
-      if (cell.sync) el.classList.add('sync-on');
-      if (cell.googleEventId) el.style.boxShadow = 'inset 0 0 0 1px rgba(78,205,196,.18)';
-      else el.style.boxShadow = 'none';
-    }
-
-    function updateCell(dayIndex, slotIndex) {
-      const el = document.querySelector(`.sched-cell[data-day="${dayIndex}"][data-slot="${slotIndex}"]`);
-      if (!el) return;
-      applyCellVisual(el, getWeekData()[dayIndex][slotIndex]);
+      if (selectedBlocks.has(getCellId(dayIndex, slotIndex))) el.classList.add('selected-block');
     }
 
     function updateBlockStarts(dayIndex) {
       const data = getWeekData();
       let prevKey = null;
       for (let slotIndex = 0; slotIndex < SLOTS.length; slotIndex++) {
-        const el = document.querySelector(`.sched-cell[data-day="${dayIndex}"][data-slot="${slotIndex}"]`);
-        if (!el) continue;
-        el.classList.remove('block-start');
+        const cellEl = document.querySelector(`.sched-cell[data-day="${dayIndex}"][data-slot="${slotIndex}"]`);
+        if (!cellEl) continue;
+        cellEl.classList.remove('block-start');
         const cell = normalizeCell(data[dayIndex][slotIndex]);
         const key = cell.categoryId ? `${cell.categoryId}|${cell.sync ? 1 : 0}` : null;
-        if (key && key !== prevKey) el.classList.add('block-start');
+        if (key && key !== prevKey) cellEl.classList.add('block-start');
         prevKey = key;
       }
     }
 
-    function getCellId(dayIndex, slotIndex) {
-      return `${getWeekKey()}|${dayIndex}|${slotIndex}`;
-    }
-
-    function setCellData(dayIndex, slotIndex, next) {
-      const data = getWeekData();
-      data[dayIndex][slotIndex] = normalizeCell(next);
-      updateCell(dayIndex, slotIndex);
-      updateBlockStarts(dayIndex);
-      saveState();
-    }
-
-    function buildPaintPayload() {
-      if (currentCategoryId === 'clear') return createEmptyCell();
-      const cat = findCategory(currentCategoryId);
-      if (!cat) return createEmptyCell();
-      return {
-        categoryId: cat.id,
-        sync: cat.defaultSync,
-        googleEventId: null,
-        googleSyncedAt: null,
-        deletedFromGoogle: false
-      };
-    }
-
-    function sameCellContent(a, b) {
-      return normalizeCell(a).categoryId === normalizeCell(b).categoryId && normalizeCell(a).sync === normalizeCell(b).sync;
-    }
-
-    function attachCellEvents(el) {
-      el.addEventListener('mousedown', e => {
+    function attachDesktopCellEvents(cell) {
+      cell.addEventListener('mousedown', e => {
         e.preventDefault();
-        const dayIndex = Number(el.dataset.day);
-        const slotIndex = Number(el.dataset.slot);
-
-        if (e.altKey) {
-          toggleSelection(dayIndex, slotIndex);
-          return;
-        }
-
+        if (currentMode !== 'paint') return applyModeAction(Number(cell.dataset.day), Number(cell.dataset.slot));
         isPainting = true;
+        const dayIndex = Number(cell.dataset.day), slotIndex = Number(cell.dataset.slot);
         const current = getWeekData()[dayIndex][slotIndex];
         const target = buildPaintPayload();
-        paintPayload = sameCellContent(current, target) ? createEmptyCell() : target;
-        clearSelection();
+        paintPayload = sameContent(current, target) ? createEmptyCell() : target;
         setCellData(dayIndex, slotIndex, paintPayload);
+        rebuildViews();
       });
-
-      el.addEventListener('mouseenter', () => {
-        if (!isPainting) return;
-        setCellData(Number(el.dataset.day), Number(el.dataset.slot), paintPayload);
+      cell.addEventListener('mouseenter', () => {
+        if (!isPainting || currentMode !== 'paint') return;
+        setCellData(Number(cell.dataset.day), Number(cell.dataset.slot), paintPayload);
+        rebuildViews();
       });
-
-      el.addEventListener('dblclick', e => {
-        e.preventDefault();
-        const dayIndex = Number(el.dataset.day);
-        const slotIndex = Number(el.dataset.slot);
-        toggleCellSync(dayIndex, slotIndex);
-      });
-
-      el.addEventListener('click', e => {
-        if (e.shiftKey) {
-          const dayIndex = Number(el.dataset.day);
-          const slotIndex = Number(el.dataset.slot);
-          toggleSelection(dayIndex, slotIndex);
-        }
+      cell.addEventListener('click', e => {
+        if (currentMode === 'paint') return;
+        applyModeAction(Number(cell.dataset.day), Number(cell.dataset.slot));
       });
     }
-
     document.addEventListener('mouseup', () => { isPainting = false; });
 
-    function toggleCellSync(dayIndex, slotIndex) {
-      const data = getWeekData();
-      const current = normalizeCell(data[dayIndex][slotIndex]);
-      if (!current.categoryId) return showToast('Ese bloque está vacío', 'error');
-      current.sync = !current.sync;
-      current.googleEventId = null;
-      current.googleSyncedAt = null;
-      current.deletedFromGoogle = false;
-      setCellData(dayIndex, slotIndex, current);
-      showToast(`Sync ${current.sync ? 'activado' : 'desactivado'} para el bloque`, 'success');
-    }
+    function buildMobileDayView() {
+      const list = document.getElementById('mobile-list');
+      list.innerHTML = '';
+      const days = getWeekDays();
+      const date = days[mobileDayIndex];
+      document.getElementById('mobile-day-title').textContent = `${DAYS_SHORT[mobileDayIndex]} · ${date.getDate()}/${date.getMonth()+1}`;
+      const data = getWeekData()[mobileDayIndex];
+      SLOTS.forEach((slot, slotIndex) => {
+        const row = document.createElement('div');
+        row.className = 'mobile-row';
+        const cell = normalizeCell(data[slotIndex]);
+        const blockId = getCellId(mobileDayIndex, slotIndex);
+        const cat = findCategory(cell.categoryId);
+        row.innerHTML = `<div class="mobile-time">${slot.label}</div>`;
+        const block = document.createElement('button');
+        block.className = 'mobile-block';
+        block.textContent = cat ? cat.name : 'Vacío';
+        if (cat) {
+          block.style.background = hexToRgba(cat.color, cell.sync ? 0.28 : 0.18);
+          block.style.color = cat.color;
+        }
+        if (!cat) {
+          block.style.background = 'rgba(6,8,14,.8)';
+          block.style.color = 'var(--muted)';
+        }
+        if (cell.sync) block.classList.add('sync-on');
+        if (selectedBlocks.has(blockId)) block.classList.add('selected-block');
+        block.addEventListener('click', () => applyModeAction(mobileDayIndex, slotIndex));
 
-    function toggleSelection(dayIndex, slotIndex) {
-      const id = getCellId(dayIndex, slotIndex);
-      if (selectedBlocks.has(id)) selectedBlocks.delete(id);
-      else selectedBlocks.add(id);
-      updateSelectionVisuals();
-      updateActionButtons();
-    }
+        const syncBtn = document.createElement('button');
+        syncBtn.className = 'mobile-small-btn' + (cell.sync ? ' active' : '');
+        syncBtn.textContent = '✓';
+        syncBtn.title = 'Cambiar sync';
+        syncBtn.addEventListener('click', () => toggleCellSync(mobileDayIndex, slotIndex));
 
-    function clearSelection() {
-      if (!selectedBlocks.size) return;
-      selectedBlocks.clear();
-      updateSelectionVisuals();
-      updateActionButtons();
-    }
+        const selectBtn = document.createElement('button');
+        selectBtn.className = 'mobile-small-btn' + (selectedBlocks.has(blockId) ? ' active' : '');
+        selectBtn.textContent = '□';
+        selectBtn.title = 'Seleccionar';
+        selectBtn.addEventListener('click', () => toggleSelection(mobileDayIndex, slotIndex));
 
-    function updateSelectionVisuals() {
-      document.querySelectorAll('.sched-cell').forEach(el => {
-        const id = getCellId(Number(el.dataset.day), Number(el.dataset.slot));
-        el.classList.toggle('selected-sync', selectedBlocks.has(id));
+        row.appendChild(block);
+        row.appendChild(syncBtn);
+        row.appendChild(selectBtn);
+        list.appendChild(row);
       });
     }
 
-    function updateActionButtons() {
-      document.getElementById('btn-delete-selected').disabled = !accessToken || selectedBlocks.size === 0;
-      document.getElementById('btn-sync').disabled = !accessToken;
-    }
-
-    function clearWeek() {
-      if (!confirm('¿Borrar toda la semana actual?')) return;
-      schedule[getWeekKey()] = Array.from({ length: 6 }, () => Array.from({ length: SLOTS.length }, () => createEmptyCell()));
-      clearSelection();
-      saveState();
-      buildGrid();
-      showToast('Semana borrada', 'success');
-    }
-
-    function getBlockKeyFromCell(cell) {
-      const c = normalizeCell(cell);
-      return c.categoryId ? `${c.categoryId}|${c.sync ? 1 : 0}|${c.googleEventId || ''}` : null;
-    }
-
-    function collectBlocks({ onlySync = false, onlySelected = false, onlyGoogle = false } = {}) {
+    function collectBlocks() {
       const data = getWeekData();
       const days = getWeekDays();
       const blocks = [];
-
       for (let dayIndex = 0; dayIndex < 6; dayIndex++) {
         let start = null;
         let current = null;
-
         for (let slotIndex = 0; slotIndex <= SLOTS.length; slotIndex++) {
           const cell = slotIndex < SLOTS.length ? normalizeCell(data[dayIndex][slotIndex]) : createEmptyCell();
-          const comparable = cell.categoryId ? JSON.stringify({ categoryId: cell.categoryId, sync: cell.sync, googleEventId: cell.googleEventId }) : null;
-          const currentComparable = current && current.categoryId ? JSON.stringify({ categoryId: current.categoryId, sync: current.sync, googleEventId: current.googleEventId }) : null;
-
-          if (comparable === currentComparable) continue;
-
+          const key = cell.categoryId ? JSON.stringify({ categoryId: cell.categoryId, sync: cell.sync, googleEventId: cell.googleEventId }) : null;
+          const prev = current && current.categoryId ? JSON.stringify({ categoryId: current.categoryId, sync: current.sync, googleEventId: current.googleEventId }) : null;
+          if (key === prev) continue;
           if (current && current.categoryId && start !== null) {
             const startSlot = SLOTS[start];
-            const endSlotRaw = slotIndex < SLOTS.length ? SLOTS[slotIndex] : plusMinutes(SLOTS[SLOTS.length - 1], 30);
-            const dayDate = days[dayIndex];
-            const blockIds = Array.from({ length: slotIndex - start }, (_, n) => getCellId(dayIndex, start + n));
-            const selected = blockIds.some(id => selectedBlocks.has(id));
-
-            const block = {
+            const endSlot = slotIndex < SLOTS.length ? SLOTS[slotIndex] : plusMinutes(SLOTS[SLOTS.length - 1], 30);
+            const cellIds = Array.from({ length: slotIndex - start }, (_, n) => getCellId(dayIndex, start + n));
+            blocks.push({
               dayIndex,
               startSlotIndex: start,
               endSlotIndex: slotIndex,
-              cellIds: blockIds,
               categoryId: current.categoryId,
               sync: current.sync,
               googleEventId: current.googleEventId,
               category: findCategory(current.categoryId),
-              startDate: toDate(dayDate, startSlot),
-              endDate: toDate(dayDate, endSlotRaw),
-              selected
-            };
-
-            if ((!onlySync || block.sync) && (!onlySelected || block.selected) && (!onlyGoogle || !!block.googleEventId)) {
-              blocks.push(block);
-            }
+              startDate: toDate(days[dayIndex], startSlot),
+              endDate: toDate(days[dayIndex], endSlot),
+              cellIds,
+              selected: cellIds.some(id => selectedBlocks.has(id))
+            });
           }
-
           current = cell.categoryId ? cell : null;
           start = slotIndex;
         }
       }
       return blocks;
     }
-
-    function toDate(baseDate, slot) {
-      const d = new Date(baseDate);
-      d.setHours(slot.h, slot.m, 0, 0);
-      return d;
-    }
-
     function plusMinutes(slot, minutes) {
       const total = slot.h * 60 + slot.m + minutes;
       return { h: Math.floor(total / 60), m: total % 60 };
     }
-
+    function toDate(baseDate, slot) {
+      const d = new Date(baseDate); d.setHours(slot.h, slot.m, 0, 0); return d;
+    }
     function buildPlannerBlockId(block) {
       return `${getWeekKey()}-${block.dayIndex}-${block.startSlotIndex}-${block.endSlotIndex}-${block.categoryId}`;
     }
-
-    function applyGoogleIdToBlock(block, googleEventId) {
+    function applyGoogleIdToBlock(block, eventId) {
       const data = getWeekData();
-      for (let s = block.startSlotIndex; s < block.endSlotIndex; s++) {
-        const current = normalizeCell(data[block.dayIndex][s]);
-        current.googleEventId = googleEventId;
-        current.googleSyncedAt = new Date().toISOString();
-        current.deletedFromGoogle = false;
-        data[block.dayIndex][s] = current;
+      for (let i = block.startSlotIndex; i < block.endSlotIndex; i++) {
+        data[block.dayIndex][i].googleEventId = eventId;
+        data[block.dayIndex][i].googleSyncedAt = new Date().toISOString();
       }
-      saveState();
-      for (let s = block.startSlotIndex; s < block.endSlotIndex; s++) updateCell(block.dayIndex, s);
-      updateBlockStarts(block.dayIndex);
     }
-
-    function clearGoogleIdFromBlock(block) {
+    function clearGoogleIdByEventId(eventId) {
       const data = getWeekData();
-      for (let s = block.startSlotIndex; s < block.endSlotIndex; s++) {
-        const current = normalizeCell(data[block.dayIndex][s]);
-        current.googleEventId = null;
-        current.googleSyncedAt = null;
-        current.deletedFromGoogle = true;
-        data[block.dayIndex][s] = current;
+      for (let d = 0; d < 6; d++) {
+        for (let s = 0; s < SLOTS.length; s++) {
+          if (data[d][s].googleEventId === eventId) {
+            data[d][s].googleEventId = null;
+            data[d][s].googleSyncedAt = null;
+          }
+        }
       }
-      saveState();
-      for (let s = block.startSlotIndex; s < block.endSlotIndex; s++) updateCell(block.dayIndex, s);
-      updateBlockStarts(block.dayIndex);
     }
 
     async function loadGoogleIdentity() {
       if (window.google?.accounts?.oauth2) return;
       await loadScript('https://accounts.google.com/gsi/client');
     }
-
     function loadScript(src) {
       return new Promise((resolve, reject) => {
         if ([...document.scripts].some(s => s.src === src)) return resolve();
         const script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
+        script.src = src; script.async = true; script.defer = true; script.onload = resolve; script.onerror = reject; document.head.appendChild(script);
       });
     }
-
     async function signInGoogle() {
       if (!clientId) return openConfig();
       await loadGoogleIdentity();
@@ -1228,10 +824,7 @@
         client_id: clientId,
         scope: 'https://www.googleapis.com/auth/calendar.events',
         callback: response => {
-          if (response.error) {
-            showToast(`Error de autenticación: ${response.error}`, 'error');
-            return;
-          }
+          if (response.error) return showToast(`Error de autenticación: ${response.error}`, 'error');
           accessToken = response.access_token;
           setAuthStatus(true);
           updateActionButtons();
@@ -1240,202 +833,180 @@
       });
       tokenClient.requestAccessToken();
     }
-
     function setAuthStatus(connected) {
       document.getElementById('status-dot').classList.toggle('connected', connected);
       document.getElementById('status-text').textContent = connected ? 'Conectado' : 'Sin conectar';
     }
-
     async function googleApi(path, options = {}) {
       const response = await fetch(`https://www.googleapis.com/calendar/v3${path}`, {
         ...options,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-          ...(options.headers || {})
-        }
+        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', ...(options.headers || {}) }
       });
       if (response.status === 204) return null;
       const text = await response.text();
       const data = text ? JSON.parse(text) : null;
-      if (!response.ok) {
-        throw new Error(data?.error?.message || `HTTP ${response.status}`);
-      }
+      if (!response.ok) throw new Error(data?.error?.message || `HTTP ${response.status}`);
       return data;
+    }
+    function getWeekTimeRange() {
+      const days = getWeekDays();
+      const timeMin = new Date(days[0]); timeMin.setHours(0,0,0,0);
+      const timeMax = new Date(days[5]); timeMax.setHours(23,59,59,999);
+      return { timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString() };
+    }
+    async function fetchPlannerEventsForWeek() {
+      const { timeMin, timeMax } = getWeekTimeRange();
+      const result = await googleApi(`/calendars/primary/events?singleEvents=true&timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&maxResults=250`);
+      return (result?.items || []).filter(item => item.extendedProperties?.private?.plannerApp === 'weekly-planner-v21');
     }
 
     async function syncBlocks() {
       if (!accessToken) return showToast('Primero conectate con Google', 'error');
-      const blocks = collectBlocks({ onlySync: true });
-      if (!blocks.length) return showToast('No hay bloques con sync activo en esta semana', 'error');
-
+      const desiredBlocks = collectBlocks().filter(b => b.sync);
+      const existingEvents = await fetchPlannerEventsForWeek();
+      const desiredMap = new Map(desiredBlocks.map(block => [buildPlannerBlockId(block), block]));
+      const existingMap = new Map(existingEvents.map(event => [event.extendedProperties?.private?.plannerBlockId, event]));
       const btn = document.getElementById('btn-sync');
-      btn.disabled = true;
-      btn.textContent = 'Sincronizando...';
+      btn.disabled = true; btn.textContent = 'Sincronizando...';
+      let created = 0, updated = 0, deleted = 0, failed = 0;
 
-      let created = 0;
-      let updated = 0;
-      let failed = 0;
-
-      for (const block of blocks) {
-        try {
-          const plannerBlockId = buildPlannerBlockId(block);
-          const payload = {
-            summary: block.category?.name || 'Bloque',
-            description: `Creado desde Planificador Semanal v2\nplannerBlockId=${plannerBlockId}\nweek=${getWeekKey()}`,
-            start: { dateTime: block.startDate.toISOString() },
-            end: { dateTime: block.endDate.toISOString() },
-            extendedProperties: {
-              private: {
-                plannerApp: 'weekly-planner-v2',
-                plannerWeek: getWeekKey(),
-                plannerBlockId,
-                plannerCategoryId: block.categoryId
-              }
-            }
-          };
-
-          let eventId = block.googleEventId;
-          if (eventId) {
-            await googleApi(`/calendars/primary/events/${encodeURIComponent(eventId)}`, {
-              method: 'PATCH',
-              body: JSON.stringify(payload)
-            });
-            updated++;
-          } else {
-            const existing = await findExistingEventByBlockId(plannerBlockId);
-            if (existing?.id) {
-              eventId = existing.id;
-              await googleApi(`/calendars/primary/events/${encodeURIComponent(eventId)}`, {
-                method: 'PATCH',
-                body: JSON.stringify(payload)
-              });
-              updated++;
-            } else {
-              const createdEvent = await googleApi('/calendars/primary/events', {
-                method: 'POST',
-                body: JSON.stringify(payload)
-              });
-              eventId = createdEvent.id;
-              created++;
-            }
-          }
-
-          applyGoogleIdToBlock(block, eventId);
-        } catch (error) {
-          failed++;
-          console.error(error);
+      for (const event of existingEvents) {
+        const blockId = event.extendedProperties?.private?.plannerBlockId;
+        if (!desiredMap.has(blockId)) {
+          try {
+            await googleApi(`/calendars/primary/events/${encodeURIComponent(event.id)}`, { method: 'DELETE' });
+            clearGoogleIdByEventId(event.id);
+            deleted++;
+          } catch (e) { failed++; console.error(e); }
         }
       }
 
-      btn.textContent = 'Sincronizar bloques';
-      btn.disabled = !accessToken;
-      showToast(`Creados: ${created} · Actualizados: ${updated} · Errores: ${failed}`, failed ? 'error' : 'success');
+      for (const block of desiredBlocks) {
+        const blockId = buildPlannerBlockId(block);
+        const event = existingMap.get(blockId);
+        const payload = {
+          summary: block.category?.name || 'Bloque',
+          description: `Creado desde Planificador Semanal v2.1\nplannerBlockId=${blockId}\nweek=${getWeekKey()}`,
+          start: { dateTime: block.startDate.toISOString() },
+          end: { dateTime: block.endDate.toISOString() },
+          extendedProperties: { private: { plannerApp: 'weekly-planner-v21', plannerWeek: getWeekKey(), plannerBlockId: blockId, plannerCategoryId: block.categoryId } }
+        };
+        try {
+          let eventId;
+          if (event?.id) {
+            await googleApi(`/calendars/primary/events/${encodeURIComponent(event.id)}`, { method: 'PATCH', body: JSON.stringify(payload) });
+            eventId = event.id; updated++;
+          } else {
+            const createdEvent = await googleApi('/calendars/primary/events', { method: 'POST', body: JSON.stringify(payload) });
+            eventId = createdEvent.id; created++;
+          }
+          applyGoogleIdToBlock(block, eventId);
+        } catch (e) { failed++; console.error(e); }
+      }
+      saveState();
+      rebuildViews();
+      btn.disabled = !accessToken; btn.textContent = 'Sincronizar bloques';
+      showToast(`Creados: ${created} · Actualizados: ${updated} · Borrados: ${deleted} · Errores: ${failed}`, failed ? 'error' : 'success');
     }
 
-    async function findExistingEventByBlockId(blockId) {
-      const timeMin = getWeekDays()[0].toISOString();
-      const maxDate = new Date(getWeekDays()[5]);
-      maxDate.setHours(23, 59, 59, 999);
-      const timeMax = maxDate.toISOString();
-      const result = await googleApi(`/calendars/primary/events?singleEvents=true&timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}&maxResults=250`);
-      const items = result?.items || [];
-      return items.find(item => item.extendedProperties?.private?.plannerBlockId === blockId) || null;
+    async function importWeek() {
+      if (!accessToken) return showToast('Primero conectate con Google', 'error');
+      const events = await fetchPlannerEventsForWeek();
+      schedule[getWeekKey()] = Array.from({ length: 6 }, () => Array.from({ length: SLOTS.length }, () => createEmptyCell()));
+      const data = getWeekData();
+      const weekStart = getWeekStart();
+      let imported = 0;
+      for (const event of events) {
+        const categoryId = event.extendedProperties?.private?.plannerCategoryId;
+        const category = findCategory(categoryId);
+        if (!category || !event.start?.dateTime || !event.end?.dateTime) continue;
+        const start = new Date(event.start.dateTime);
+        const end = new Date(event.end.dateTime);
+        const dayIndex = Math.floor((new Date(start.getFullYear(), start.getMonth(), start.getDate()) - weekStart) / 86400000);
+        if (dayIndex < 0 || dayIndex > 5) continue;
+        const startMinutes = start.getHours() * 60 + start.getMinutes();
+        const endMinutes = end.getHours() * 60 + end.getMinutes();
+        for (let i = 0; i < SLOTS.length; i++) {
+          const slotMinutes = SLOTS[i].h * 60 + SLOTS[i].m;
+          const nextSlotMinutes = slotMinutes + 30;
+          if (slotMinutes >= startMinutes && nextSlotMinutes <= endMinutes) {
+            data[dayIndex][i] = { categoryId, sync: true, googleEventId: event.id, googleSyncedAt: new Date().toISOString() };
+          }
+        }
+        imported++;
+      }
+      saveState(); rebuildViews(); showToast(`Importados: ${imported} evento(s) de esta app`, 'success');
     }
 
     async function deleteSelectedSynced() {
       if (!accessToken) return showToast('Primero conectate con Google', 'error');
-      const blocks = collectBlocks({ onlySelected: true, onlyGoogle: true });
-      if (!blocks.length) return showToast('Seleccioná bloques ya sincronizados para borrar', 'error');
+      const blocks = collectBlocks().filter(b => b.selected && b.googleEventId);
+      if (!blocks.length) return showToast('Seleccioná bloques sincronizados para borrar', 'error');
       if (!confirm(`¿Borrar ${blocks.length} bloque(s) sincronizados de Google Calendar?`)) return;
-
       const btn = document.getElementById('btn-delete-selected');
-      btn.disabled = true;
-      btn.textContent = 'Borrando...';
-
-      let ok = 0;
-      let fail = 0;
-
+      btn.disabled = true; btn.textContent = 'Borrando...';
+      let ok = 0, fail = 0;
       for (const block of blocks) {
         try {
           await googleApi(`/calendars/primary/events/${encodeURIComponent(block.googleEventId)}`, { method: 'DELETE' });
-          clearGoogleIdFromBlock(block);
+          clearGoogleIdByEventId(block.googleEventId);
           ok++;
-        } catch (error) {
-          fail++;
-          console.error(error);
-        }
+        } catch (e) { fail++; console.error(e); }
       }
-
-      clearSelection();
-      btn.textContent = 'Borrar sincronizados';
-      btn.disabled = !accessToken;
+      saveState(); clearSelection(); rebuildViews();
+      btn.disabled = !accessToken; btn.textContent = 'Borrar seleccionados';
       showToast(`Eliminados: ${ok} · Errores: ${fail}`, fail ? 'error' : 'success');
     }
 
     function selectSyncedWeek() {
-      clearSelection();
-      const blocks = collectBlocks({ onlyGoogle: true });
-      blocks.forEach(block => block.cellIds.forEach(id => selectedBlocks.add(id)));
-      updateSelectionVisuals();
-      updateActionButtons();
-      showToast(`${blocks.length} bloque(s) sincronizados seleccionados`, 'success');
+      selectedBlocks.clear();
+      collectBlocks().filter(b => b.googleEventId).forEach(block => block.cellIds.forEach(id => selectedBlocks.add(id)));
+      updateActionButtons(); rebuildViews(); showToast('Bloques sincronizados seleccionados', 'success');
     }
 
+    function updateActionButtons() {
+      document.getElementById('btn-sync').disabled = !accessToken;
+      document.getElementById('btn-import-week').disabled = !accessToken;
+      document.getElementById('btn-delete-selected').disabled = !accessToken || selectedBlocks.size === 0;
+    }
+
+    function clearWeek() {
+      if (!confirm('¿Borrar toda la semana actual?')) return;
+      schedule[getWeekKey()] = Array.from({ length: 6 }, () => Array.from({ length: SLOTS.length }, () => createEmptyCell()));
+      saveState(); clearSelection(); rebuildViews(); showToast('Semana borrada', 'success');
+    }
+
+    function rebuildViews() {
+      buildGrid();
+      buildMobileDayView();
+    }
     function openConfig() {
       document.getElementById('client-id-input').value = clientId;
       document.getElementById('config-dialog').showModal();
     }
-
     function saveConfig() {
       const value = document.getElementById('client-id-input').value.trim();
       if (!value) return showToast('Pegá un Client ID válido', 'error');
-      clientId = value;
-      saveState();
-      document.getElementById('config-dialog').close();
-      showToast('Client ID guardado', 'success');
+      clientId = value; saveState(); document.getElementById('config-dialog').close(); showToast('Client ID guardado', 'success');
     }
-
     function showToast(message, type = 'success') {
       const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.className = `toast ${type} show`;
-      clearTimeout(showToast.timer);
-      showToast.timer = setTimeout(() => toast.classList.remove('show'), 3500);
+      toast.textContent = message; toast.className = `toast ${type} show`;
+      clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toast.classList.remove('show'), 3500);
     }
-
     function escapeHtml(value) {
-      return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#39;');
+      return String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#39;');
     }
-
     function hexToRgba(hex, alpha) {
-      const clean = hex.replace('#', '');
-      const n = parseInt(clean, 16);
-      const r = (n >> 16) & 255;
-      const g = (n >> 8) & 255;
-      const b = n & 255;
+      const clean = hex.replace('#', ''); const n = parseInt(clean, 16); const r = (n >> 16) & 255; const g = (n >> 8) & 255; const b = n & 255;
       return `rgba(${r}, ${g}, ${b}, ${alpha})`;
     }
 
-    document.getElementById('prev-week').addEventListener('click', () => {
-      weekOffset -= 1;
-      clearSelection();
-      formatWeekLabel();
-      buildGrid();
-    });
-    document.getElementById('next-week').addEventListener('click', () => {
-      weekOffset += 1;
-      clearSelection();
-      formatWeekLabel();
-      buildGrid();
-    });
+    document.getElementById('prev-week').addEventListener('click', () => { weekOffset -= 1; mobileDayIndex = 0; clearSelection(); formatWeekLabel(); rebuildViews(); });
+    document.getElementById('next-week').addEventListener('click', () => { weekOffset += 1; mobileDayIndex = 0; clearSelection(); formatWeekLabel(); rebuildViews(); });
     document.getElementById('btn-google-auth').addEventListener('click', signInGoogle);
     document.getElementById('btn-sync').addEventListener('click', syncBlocks);
+    document.getElementById('btn-import-week').addEventListener('click', importWeek);
     document.getElementById('btn-delete-selected').addEventListener('click', deleteSelectedSynced);
     document.getElementById('btn-clear-week').addEventListener('click', clearWeek);
     document.getElementById('btn-add-category').addEventListener('click', addCategory);
@@ -1444,12 +1015,16 @@
     document.getElementById('cancel-config').addEventListener('click', () => document.getElementById('config-dialog').close());
     document.getElementById('save-config').addEventListener('click', saveConfig);
     document.getElementById('btn-select-synced').addEventListener('click', selectSyncedWeek);
+    document.getElementById('mobile-prev-day').addEventListener('click', () => { mobileDayIndex = (mobileDayIndex + 5) % 6; buildMobileDayView(); });
+    document.getElementById('mobile-next-day').addEventListener('click', () => { mobileDayIndex = (mobileDayIndex + 1) % 6; buildMobileDayView(); });
+    document.querySelectorAll('[data-mode]').forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mode)));
+    document.querySelectorAll('[data-mobile-mode]').forEach(btn => btn.addEventListener('click', () => setMode(btn.dataset.mobileMode)));
 
     if (clientId) document.getElementById('client-id-input').value = clientId;
-
     formatWeekLabel();
     renderCategories();
-    buildGrid();
+    setMode('paint');
+    rebuildViews();
     updateActionButtons();
   </script>
 </body>
