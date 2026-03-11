@@ -409,6 +409,21 @@
       }
       return slots;
     }
+    function formatSlotRange(slot) {
+      const startMinutes = slot.h * 60 + slot.m;
+      const endMinutes = startMinutes + 30;
+
+      const sh = Math.floor(startMinutes / 60);
+      const sm = startMinutes % 60;
+
+      const eh = Math.floor(endMinutes / 60);
+      const em = endMinutes % 60;
+
+      const start = `${String(sh).padStart(2,'0')}:${String(sm).padStart(2,'0')}`;
+      const end = `${String(eh).padStart(2,'0')}:${String(em).padStart(2,'0')}`;
+
+      return `${start}–${end}`;
+    }
     function getWeekStart(offset = 0) {
       const now = new Date();
       const day = now.getDay();
@@ -614,7 +629,7 @@
       SLOTS.forEach((slot, slotIndex) => {
         const time = document.createElement('div');
         time.className = 'time-cell';
-        time.textContent = slot.label;
+        time.textContent = formatSlotRange(slot);
         grid.appendChild(time);
         for (let dayIndex = 0; dayIndex < 6; dayIndex++) {
           const cell = document.createElement('div');
@@ -706,7 +721,7 @@
         const cell = normalizeCell(data[slotIndex]);
         const blockId = getCellId(mobileDayIndex, slotIndex);
         const cat = findCategory(cell.categoryId);
-        row.innerHTML = `<div class="mobile-time">${slot.label}</div>`;
+        row.innerHTML = `<div class="mobile-time">${formatSlotRange(slot)}</div>`;
         const block = document.createElement('button');
         block.className = 'mobile-block';
         block.textContent = cat ? cat.name : 'Vacío';
